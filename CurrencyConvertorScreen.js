@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 
 const API_KEY = 'e954581353f94a19b67f3f2acaf6f6ed';
 const BASE_URL = 'https://openexchangerates.org/api/';
@@ -34,9 +34,10 @@ const CurrencyConverterScreen = () => {
     }
   };
   return (
+    <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
       <View>
-        <Text>Enter USD Amount:</Text>
+        <Text style={styles.label}>Enter USD Amount:</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter amount"
@@ -44,16 +45,16 @@ const CurrencyConverterScreen = () => {
           onChangeText={setBaseAmount}
           />
       </View>
-      <View>
+      <View style={styles.ratesContainer}>
       <Text>Conversion Rate</Text>
         {TARGET_CURRENCIES.map((currency) => (
           <TouchableOpacity
           key={currency}
           style={styles.currencyRow}
           >
-          <View >
-            <Text>{currency}:</Text>
-            <Text>
+          <View style={styles.currencyInfo}>
+            <Text style={styles.currencyCode}>{currency}:</Text>
+            <Text style={styles.convertedAmount}>
           {convertCurrency(baseAmount, exchangeRates[currency])}
             </Text>
           </View>
@@ -65,27 +66,77 @@ const CurrencyConverterScreen = () => {
       </View>
 
     </View>
+    </SafeAreaView>
   );
 };
 
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1, // Ensure SafeAreaView takes full screen
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f4f4f4',
+  },
+  ratesContainer: {
+    marginTop: 10,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+
+  currencyInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  currencyCode: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  convertedAmount: {
+    fontSize: 18,
+    color: '#666',
   },
   input: {
     borderColor: 'gray',
     borderWidth: 1,
     marginp: 10,
+
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 18,
+    color: '#555',
+    backgroundColor: '#fff',
+  },
+
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
   },
 
   currencyRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    borderColor: '#ccc',
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // padding: 10,
+    // borderColor: '#ccc',
+
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
  
 });
