@@ -1,11 +1,19 @@
 import React, {useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 
 const API_KEY = 'e954581353f94a19b67f3f2acaf6f6ed';
 const BASE_URL = 'https://openexchangerates.org/api/';
 const ENDPOINT = 'latest.json';
 const TARGET_CURRENCIES = ['AUD','EUR', 'GBP', 'CAD', 'NZD'];
 
+// Mapping currency codes to their flag image file names (adjust paths as needed)
+const currencyFlags = {
+  AUD: require('./assets/currencyFlags/AUD.png'),
+  EUR: require('./assets/currencyFlags/EUR.png'),
+  GBP: require('./assets/currencyFlags/GBP.png'),
+  CAD: require('./assets/currencyFlags/CAD.png'),
+  NZD: require('./assets/currencyFlags/NZD.png'),
+};
 const CurrencyConverterScreen = () => {
   const [baseAmount, setBaseAmount] = useState('1');
   const [exchangeRates, setExchangeRates] = useState({});
@@ -46,14 +54,18 @@ const CurrencyConverterScreen = () => {
           />
       </View>
       <View style={styles.ratesContainer}>
-      <Text>Conversion Rate</Text>
         {TARGET_CURRENCIES.map((currency) => (
           <TouchableOpacity
           key={currency}
           style={styles.currencyRow}
           >
           <View style={styles.currencyInfo}>
+          <View style={styles.currencyDetails}>
+          {currencyFlags[currency] && (
+                <Image source={currencyFlags[currency]} style={styles.flagIcon} />
+              )}
             <Text style={styles.currencyCode}>{currency}:</Text>
+            </View>
             <Text style={styles.convertedAmount}>
           {convertCurrency(baseAmount, exchangeRates[currency])}
             </Text>
@@ -92,6 +104,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  currencyDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   currencyCode: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -102,10 +118,6 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginp: 10,
-
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
@@ -123,11 +135,6 @@ const styles = StyleSheet.create({
   },
 
   currencyRow: {
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // padding: 10,
-    // borderColor: '#ccc',
-
     backgroundColor: '#fff',
     padding: 15,
     borderRadius: 8,
@@ -137,6 +144,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+  },
+
+  flagIcon: {
+    width: 64, // Adjust size as needed
+    height: 46, // Adjust size as needed
+    marginRight: 8, // Add some spacing between flag and code
+    resizeMode: 'contain', // Ensure the entire image is visible
   },
  
 });
