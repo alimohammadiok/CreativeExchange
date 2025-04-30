@@ -111,12 +111,9 @@ const CurrencyConverterScreen = () => {
       <HistoricalRatesModal
         visible={modalVisible}
         onClose={closeModal}
-      >
-        <View>
-          <Text style={styles.innerModalText}>This content is inside the separate modal!</Text>
-          {/* You can add more content here, like your chart component */}
-        </View>
-      </HistoricalRatesModal>
+        chartData={historicalRates}
+      />
+       
     </View>
     </SafeAreaView>
     

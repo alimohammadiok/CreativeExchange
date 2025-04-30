@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, Pressable } from 'react-native';
 
-const HistoricalRatesModal = ({ visible, onClose, children }) => {
+const HistoricalRatesModal = ({ visible, onClose, chartData }) => {
   return (
     <Modal
       animationType="slide"
@@ -12,7 +12,7 @@ const HistoricalRatesModal = ({ visible, onClose, children }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          {children}
+          <Text>This is modal {chartData}</Text>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={onClose}
