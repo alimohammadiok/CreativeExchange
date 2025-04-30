@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, Image } from 'react-native';
-
+import HistoricalRatesModal from './HistoricalRatesModal';
 const API_KEY = 'e954581353f94a19b67f3f2acaf6f6ed';
 const BASE_URL = 'https://openexchangerates.org/api/';
 const ENDPOINT = 'latest.json';
@@ -17,7 +17,17 @@ const currencyFlags = {
 const CurrencyConverterScreen = () => {
   const [baseAmount, setBaseAmount] = useState('1');
   const [exchangeRates, setExchangeRates] = useState({});
-  
+  const [historicalRates, setHistoricalRates] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   useEffect(() => {
     fetchLatestExchangeRates();
   }
@@ -41,6 +51,26 @@ const CurrencyConverterScreen = () => {
       console.error('Error fetching exchange rates:', error);
     }
   };
+
+  const handleCurrencyPress = async (currency) => {
+    // setSelectedCurrency(currency);
+    setModalVisible(true);
+    setHistoricalRates(generateMockHistoricalData(currency)); // Use mock data
+    console.log('this is historical rates:',historicalRates);
+
+  };
+
+  const generateMockHistoricalData = (currency) => {
+    const baseRate = exchangeRates[currency] || 1; // Use current rate as a base
+    const dataPoints = [];
+    for (let i = 13; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const value = parseFloat((baseRate + (Math.random() - 0.5) * 0.1 * baseRate).toFixed(4)); // Vary the rate slightly
+      dataPoints.push(value);
+    }
+    return dataPoints;
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
     <View style={styles.container}>
@@ -58,6 +88,7 @@ const CurrencyConverterScreen = () => {
           <TouchableOpacity
           key={currency}
           style={styles.currencyRow}
+          onPress={()=> handleCurrencyPress(currency)}
           >
           <View style={styles.currencyInfo}>
           <View style={styles.currencyDetails}>
@@ -75,10 +106,20 @@ const CurrencyConverterScreen = () => {
         ))
 
         }
+        
       </View>
-
+      <HistoricalRatesModal
+        visible={modalVisible}
+        onClose={closeModal}
+      >
+        <View>
+          <Text style={styles.innerModalText}>This content is inside the separate modal!</Text>
+          {/* You can add more content here, like your chart component */}
+        </View>
+      </HistoricalRatesModal>
     </View>
     </SafeAreaView>
+    
   );
 };
 
